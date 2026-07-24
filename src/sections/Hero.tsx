@@ -1,6 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
 import { MagneticButton } from '../components/ui/MagneticButton';
 
 const GithubSVG = () => (
@@ -15,69 +13,6 @@ const LinkedinSVG = () => (
   </svg>
 );
 
-/* ─── Particle field ─────────────────────────────────────── */
-function ParticleField() {
-  const pointsRef = useRef<THREE.Points>(null!);
-
-  const [positions] = [
-    (() => {
-      const pos = new Float32Array(600 * 3);
-      for (let i = 0; i < 600; i++) {
-        pos[i * 3]     = (Math.random() - 0.5) * 18;
-        pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
-        pos[i * 3 + 2] = (Math.random() - 0.5) * 8 - 2;
-      }
-      return pos;
-    })(),
-  ];
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-  useFrame(({ clock }) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y = clock.getElapsedTime() * 0.012;
-    }
-  });
-
-  return (
-    <points ref={pointsRef} geometry={geo}>
-      <pointsMaterial size={0.035} color="#3b82f6" transparent opacity={0.5} sizeAttenuation />
-    </points>
-  );
-}
-
-/* ─── Grid floor ─────────────────────────────────────────── */
-function GridFloor() {
-  return (
-    <gridHelper
-      args={[30, 30, '#1e3a5f', '#0f2040']}
-      position={[0, -3.5, 0]}
-      rotation={[0, 0, 0]}
-    />
-  );
-}
-
-/* ─── Main wireframe sphere ──────────────────────────────── */
-function WireframeSphere() {
-  const ref = useRef<THREE.Mesh>(null!);
-  useFrame(({ clock, mouse }) => {
-    if (!ref.current) return;
-    const t = clock.getElapsedTime();
-    ref.current.rotation.y = t * 0.08;
-    ref.current.rotation.x = Math.sin(t * 0.15) * 0.15;
-    ref.current.position.x = mouse.x * 0.3;
-    ref.current.position.y = -0.3 + mouse.y * 0.2;
-  });
-  return (
-    <mesh ref={ref}>
-      <icosahedronGeometry args={[1.6, 1]} />
-      <meshBasicMaterial color="#3b82f6" wireframe transparent opacity={0.18} />
-    </mesh>
-  );
-}
-
-/* ─── Hero Section ───────────────────────────────────────── */
 export function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null);
 
@@ -92,9 +27,8 @@ export function Hero() {
       span.style.cssText = `
         display: inline-block;
         opacity: 0;
-        transform: translateY(0.6em);
-        transition: opacity 0.5s ${0.04 + i * 0.025}s cubic-bezier(0.16,1,0.3,1),
-                    transform 0.5s ${0.04 + i * 0.025}s cubic-bezier(0.16,1,0.3,1);
+        transform: translateY(0.4em);
+        transition: opacity 0.4s ${0.03 + i * 0.02}s ease-out, transform 0.4s ${0.03 + i * 0.02}s ease-out;
       `;
       el.appendChild(span);
     });
@@ -110,31 +44,8 @@ export function Hero() {
 
   return (
     <section id="hero" className="hero">
-      {/* 3D Background */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-        <Canvas
-          camera={{ fov: 50, position: [0, 0, 5] }}
-          gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
-          dpr={[1, 1.5]}
-          style={{ background: 'transparent' }}
-        >
-          <fog attach="fog" args={['#050814', 6, 18]} />
-          <ambientLight intensity={0.15} />
-          <pointLight position={[5, 5, 3]} color="#3b82f6" intensity={2.5} />
-          <pointLight position={[-4, -3, 2]} color="#818cf8" intensity={1.2} />
-          <hemisphereLight args={['#0a1628', '#000000', 0.3]} />
-          <WireframeSphere />
-          <ParticleField />
-          <GridFloor />
-        </Canvas>
-      </div>
-
-      {/* Content */}
-      <div className="hero-content" style={{ position: 'relative', zIndex: 2 }}>
-        <div
-          className="hero-avail reveal visible"
-          style={{ animationDelay: '0s' }}
-        >
+      <div className="hero-content">
+        <div className="hero-avail">
           <span className="hero-avail-dot" />
           Available for roles — Jan 2027
         </div>
@@ -143,14 +54,11 @@ export function Hero() {
           Vaibhav{'\n'}Sharma
         </h1>
 
-        <p
-          className="hero-sub reveal"
-          style={{ transitionDelay: '0.3s' }}
-        >
-          Full-stack developer and systems tinkerer from Dehradun. I build things that touch hardware, kernels, and production — not just components.
+        <p className="hero-sub">
+          Full-stack developer and systems tinkerer. I build applications that touch hardware, kernels, and production — not just components.
         </p>
 
-        <div className="hero-actions reveal" style={{ transitionDelay: '0.5s' }}>
+        <div className="hero-actions">
           <MagneticButton href="#work" className="btn btn-primary">
             View Work →
           </MagneticButton>
@@ -175,24 +83,6 @@ export function Hero() {
           >
             <LinkedinSVG />
           </a>
-        </div>
-
-        {/* Scroll indicator */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '-60px',
-            left: '40px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          <span style={{ fontSize: '10px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--faint)', fontFamily: 'var(--mono)' }}>
-            Scroll
-          </span>
-          <div style={{ width: '1px', height: '48px', background: 'linear-gradient(to bottom, var(--blue), transparent)' }} />
         </div>
       </div>
     </section>

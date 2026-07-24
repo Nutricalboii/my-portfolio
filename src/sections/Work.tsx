@@ -1,5 +1,4 @@
 import { ExternalLink } from 'lucide-react';
-import { TiltCard } from '../components/ui/TiltCard';
 import { PROJECTS_WEB, PROJECTS_SYSTEMS } from '../data';
 import { useState } from 'react';
 
@@ -11,14 +10,11 @@ const GithubSVG = () => (
 
 type Project = typeof PROJECTS_WEB[number] | typeof PROJECTS_SYSTEMS[number];
 
-function WorkCard({ p, idx }: { p: Project; idx: number }) {
+function WorkCard({ p }: { p: Project }) {
   const status = 'status' in p ? p.status : null;
 
   return (
-    <TiltCard className="card work-card reveal" data-delay={idx * 0.08}>
-      {p.id === 'scholarsync' && (
-        <div className="work-card-badge">🏆 Hackathon Winner</div>
-      )}
+    <div className="work-card">
       {status && (
         <div
           className="work-card-badge"
@@ -36,8 +32,8 @@ function WorkCard({ p, idx }: { p: Project; idx: number }) {
       <div className="work-card-desc">{p.desc}</div>
 
       <div className="work-card-tags">
-        {p.tags.map((t: string, ti: number) => (
-          <span key={t} className="chip" style={{ transitionDelay: `${ti * 0.04}s` }}>{t}</span>
+        {p.tags.map((t: string) => (
+          <span key={t} className="chip">{t}</span>
         ))}
       </div>
 
@@ -51,7 +47,7 @@ function WorkCard({ p, idx }: { p: Project; idx: number }) {
           </a>
         )}
       </div>
-    </TiltCard>
+    </div>
   );
 }
 
@@ -62,15 +58,15 @@ export function Work() {
   return (
     <section id="work" className="section">
       <div className="wrap">
-        <div className="eyebrow section-eyebrow reveal">Selected Work</div>
-        <h2 className="section-title reveal" style={{ transitionDelay: '0.1s' }}>
+        <div className="eyebrow">Selected Work</div>
+        <h2 className="section-title">
           Things I have shipped<span style={{ color: 'var(--blue)' }}>.</span>
         </h2>
-        <p className="section-sub reveal" style={{ transitionDelay: '0.2s' }}>
-          Not cards. Not badges. What the problem was, why I approached it this way, what broke, and what I'd change.
+        <p className="section-sub">
+          What the problem was, how I approached it, and what technologies powered it.
         </p>
 
-        <div className="tabs reveal" style={{ transitionDelay: '0.3s' }}>
+        <div className="tabs">
           <button className={`tab-btn ${activeTab === 'web' ? 'active' : ''}`} onClick={() => setActiveTab('web')}>
             Web & Apps
           </button>
@@ -80,8 +76,8 @@ export function Work() {
         </div>
 
         <div className="work-grid">
-          {projects.map((p, i) => (
-            <WorkCard key={p.id} p={p} idx={i} />
+          {projects.map((p) => (
+            <WorkCard key={p.id} p={p} />
           ))}
         </div>
       </div>

@@ -2,9 +2,8 @@ export const PROJECTS_WEB = [
   {
     id: 'scholarsync',
     name: 'ScholarSync',
-    desc: 'AI-powered academic platform built in 24 hours for Google GDSC TechSprint. Multi-doc RAG with citations — ChromaDB + Gemini 2.0. Winner.',
+    desc: 'AI-powered academic platform built in 24 hours. Multi-doc RAG with citations — ChromaDB + Gemini 2.0.',
     tags: ['Next.js', 'FastAPI', 'ChromaDB', 'Gemini 2.0'],
-    badge: '🏆 Hackathon Winner',
     link: 'https://github.com/Nutricalboii',
     live: true,
   },
